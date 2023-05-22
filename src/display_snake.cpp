@@ -1,5 +1,4 @@
 #include <math.h>
-#include <iostream>
 #include "display_snake.hpp"
 
 SnakeDisplay::SnakeDisplay(int width, int height, int speed)
@@ -98,7 +97,6 @@ void SnakeDisplay::PrintRows(std::vector<std::string> rows)
     for (size_t i = 0; i < rows.size(); ++i)
     {
         text.setString(rows[i].c_str());
-        std::cout<<rows[i].c_str()<<std::endl;
         text.setCharacterSize(20);
         text.setStyle(sf::Text::Bold | sf::Text::Italic);
         text.setPosition(row_indent, curr_height);
