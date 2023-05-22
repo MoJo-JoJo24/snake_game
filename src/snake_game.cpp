@@ -247,6 +247,7 @@ void SnakeGame::DisplayFrame()
     m_dis.DrawRec(m_foodx, m_foody, m_block_size, sf::Color::Green);
     PrintSnake();
     m_dis.YourScore(m_snake.GetLength() - 1);
+    m_dis.YourSpeed();
     m_dis.UpdateFrame();
 }
 
