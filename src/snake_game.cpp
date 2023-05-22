@@ -138,22 +138,28 @@ void SnakeGame::GenerateFood()
 
 void SnakeGame::ShowScoreTable()
 {
-    std::multimap<int, int, std::greater<int>> scores;
+    std::multimap<int, ROW, std::greater<int>> scores;
     std::vector<ROW> vec = m_db.GETScoreTable();
     for (ROW row : vec)
     {
-        scores.insert(std::pair(std::stoi(row.score), row.row_number));
+        scores.insert(std::pair(std::stoi(row.score), row));
     }
 
     int range = scores.size() > highest_score_rows ? highest_score_rows : scores.size();
     
     auto iter = scores.begin();
-    std::vector<std::string> finalists;
-    finalists.push_back(m_db.ReadFromDB(1));
+    std::vector<std::vector<std::string>> finalists(6);
+    ROW header = m_db.FromBuffer(const_cast<char *>(m_db.ReadFromDB(1).c_str()));
+
+    finalists[0].push_back(header.name);
+    finalists[0].push_back(header.score);
+    finalists[0].push_back(header.date);
 
     for (int i = 0; i < range; ++i)
     {
-        finalists.push_back(m_db.ReadFromDB(iter->second));
+        finalists[i + 1].push_back(iter->second.name);
+        finalists[i + 1].push_back(iter->second.score);
+        finalists[i + 1].push_back(iter->second.date);
         ++iter;
     }
 
@@ -252,7 +258,7 @@ bool SnakeGame::IsEat() const
 void SnakeGame::GetName()
 {
     m_dis.FillBackGround(sf::Color::Blue);
-    m_dis.Message("enter name: ");
+    m_dis.Message("New Game Enter name: ");
     m_dis.UpdateFrame();
     std::string name("");
     bool is_running = true;
@@ -276,7 +282,7 @@ void SnakeGame::GetName()
             }
         }
         m_dis.FillBackGround(sf::Color::Blue);        
-        m_dis.Message("enter name: " + name + "");
+        m_dis.Message("New Game Enter name:   " + name + "");
         m_dis.UpdateFrame();
     }
     

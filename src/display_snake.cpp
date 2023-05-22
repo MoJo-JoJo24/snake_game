@@ -85,7 +85,7 @@ void SnakeDisplay::Message(std::string str)
     m_dis.draw(text);
 }
 
-void SnakeDisplay::PrintRows(std::vector<std::string> rows)
+void SnakeDisplay::PrintRows(std::vector<std::vector<std::string>> rows)
 {
     sf::Text text;
 
@@ -93,15 +93,23 @@ void SnakeDisplay::PrintRows(std::vector<std::string> rows)
     text.setFillColor(sf::Color::Green);
     int row_height = 20;
     int curr_height = 35;
-    int row_indent = 20;     
     for (size_t i = 0; i < rows.size(); ++i)
     {
-        text.setString(rows[i].c_str());
-        text.setCharacterSize(20);
-        text.setStyle(sf::Text::Bold | sf::Text::Italic);
-        text.setPosition(row_indent, curr_height);
-
-        m_dis.draw(text);
+        int row_indent = 20;
+        for (std::string str : rows[i])
+        {
+            auto iter = str.begin();
+            if ('\n' == *iter)
+            {
+                str.erase(iter);
+            }
+            text.setString(str.c_str());
+            text.setCharacterSize(20);
+            text.setStyle(sf::Text::Bold | sf::Text::Italic);
+            text.setPosition(row_indent, curr_height);
+            m_dis.draw(text);
+            row_indent += 190;
+        }
         curr_height += row_height;
     }
 }

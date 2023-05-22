@@ -198,7 +198,8 @@ ROW ScoreDataBase::FromBuffer(char *buffer)
     tmp = word_boundary;
     ++tmp;
     line.date = *tmp;
-    ++tmp;        
+    ++tmp;    
+
     while (tmp != end)
     {
         line.date += *tmp;
