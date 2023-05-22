@@ -39,7 +39,9 @@ public:
     bool IsOpen();
     void Message(std::string);
     void YourScore(int score);
+    void YourSpeed();
     void SetFrameSpeed(int speed);
+    
     KEY left;
     KEY right;
     KEY up;
