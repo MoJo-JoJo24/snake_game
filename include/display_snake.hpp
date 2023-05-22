@@ -34,7 +34,7 @@ public:
     void DrawRec(int x1, int y1, int block_size, sf::Color color);
     void PrintScore(int score);
     void PrintMessage(std::string msg, sf::Color color);
-    void PrintRows(std::vector<std::string>);
+    void PrintRows(std::vector<std::vector<std::string>>);
     void Close();
     bool IsOpen();
     void Message(std::string);
