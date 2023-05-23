@@ -4,8 +4,8 @@
 #include <vector>
 
 typedef std::pair<int, int> BLOCK2D;
-typedef int X2D;
-typedef int Y2D;
+typedef int WIDTH_POINT;
+typedef int HEIGHT_POINT;
  
 class SnakeBody
 {

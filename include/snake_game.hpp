@@ -62,7 +62,7 @@ private:
     std::uniform_int_distribution<> m_rand_height_point;
     std::unordered_map<KEY, bool> m_manu_options;
     std::unordered_map<KEY, BLOCK2D> m_moves;
-    std::unordered_map<X2D, std::unordered_map<Y2D, KEY>> m_invalid_move;
+    std::unordered_map<WIDTH_POINT, std::unordered_map<HEIGHT_POINT, KEY>> m_invalid_move;
 };
 
 
