@@ -25,11 +25,11 @@ m_row_size(m_name_col_width + m_score_col_width + m_date_col_width + 2)
     file_handle.close();
     if ('N' != *buf)
     {
-        ROW line;
-        line.name = "NAME";
-        line.score = "SCORE";
-        line.date = "DATE";
-        WriteToDB(line);
+        ROW header;
+        header.name = "NAME";
+        header.score = "SCORE";
+        header.date = "DATE";
+        WriteToDB(header);
     }
     
     delete [] buf; 
@@ -145,18 +145,19 @@ std::vector<ROW> ScoreDataBase::GETScoreTable()
     }
 
     std::vector<ROW> res;
-    int length = GetLengthOfFile(file_handle);
 
     char *buf = new char [m_row_size];
     char *head = buf;
-    int ctr = 2;
-    for (int i = m_row_size; i < length - m_row_size; i += m_row_size, ++ctr)
+    int row_count = 2;
+    int length = GetLengthOfFile(file_handle);
+    
+    for (int i = m_row_size; i < length - m_row_size; i += m_row_size, ++row_count)
     {
         bzero(buf, m_row_size);
         file_handle.seekg(i, std::ios::beg);
         file_handle.read(buf, m_row_size);
         ROW line = FromBuffer(buf);
-        line.row_number = ctr;
+        line.row_number = row_count;
 
         res.push_back(line);
     }
@@ -173,6 +174,7 @@ ROW ScoreDataBase::FromBuffer(char *buffer)
     char *end = buffer + m_row_size;
     char *word_boundary = strchr(buffer, ' ');
     char *tmp = buffer;
+    
     ROW line;
     
     line.name = *tmp;

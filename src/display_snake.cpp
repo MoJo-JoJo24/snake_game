@@ -4,16 +4,16 @@ SnakeDisplay::SnakeDisplay(int width, int height, int speed)
 : m_clock(), m_font(), m_dis(sf::VideoMode(width, height), "Snake Game"),
   m_frame_speed(speed), m_width(width), m_height(height)
 {
-    left = sf::Keyboard::Key::Left;
-    right = sf::Keyboard::Key::Right;
-    up = sf::Keyboard::Key::Up;
-    down = sf::Keyboard::Key::Down;
-    q = sf::Keyboard::Key::Q;
-    c = sf::Keyboard::Key::C;
+    left_key = sf::Keyboard::Key::Left;
+    right_key = sf::Keyboard::Key::Right;
+    up_key = sf::Keyboard::Key::Up;
+    down_key = sf::Keyboard::Key::Down;
+    q_key = sf::Keyboard::Key::Q;
+    c_key = sf::Keyboard::Key::C;
     
     if (!m_font.loadFromFile("arial.ttf"))
     {
-        throw std::runtime_error("Failed to open Font file");
+        throw std::runtime_error("Failed to open Font file arial.ttf");
     }
 }
 

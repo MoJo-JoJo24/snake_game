@@ -3,27 +3,28 @@
 SnakeGame::SnakeGame(int width, int height, int speed, int block_size): 
 m_width(width), m_height(height), m_speed(speed), m_block_size(block_size),
 m_game_over(false), m_game_close(false), m_dis(width, height, speed), m_snake(), 
-m_db(), m_random(), m_gen(m_random()), m_distr_x(0, width - block_size), m_distr_y(0, height - block_size)
+m_db(), m_random(), m_random_generator(m_random()), m_rand_width_point(0, width), 
+m_rand_height_point(0, height)
 {
-    m_manu_op[m_dis.q] = true;
-    m_manu_op[m_dis.c] = false;
+    m_manu_options[m_dis.q_key] = true;
+    m_manu_options[m_dis.c_key] = false;
 
-    m_moves[m_dis.left].first = -m_block_size;
-    m_moves[m_dis.left].second = 0;
-    m_invalid_move[-m_block_size][0] = m_dis.right;
+    m_moves[m_dis.left_key].first = -m_block_size;
+    m_moves[m_dis.left_key].second = 0;
+    m_invalid_move[-m_block_size][0] = m_dis.right_key;
 
-    m_moves[m_dis.right].first = m_block_size;
-    m_moves[m_dis.right].second = 0;
-    m_invalid_move[m_block_size][0] = m_dis.left;
+    m_moves[m_dis.right_key].first = m_block_size;
+    m_moves[m_dis.right_key].second = 0;
+    m_invalid_move[m_block_size][0] = m_dis.left_key;
 
 
-    m_moves[m_dis.up].first = 0;
-    m_moves[m_dis.up].second = -m_block_size;
-    m_invalid_move[0][-m_block_size] = m_dis.down;
+    m_moves[m_dis.up_key].first = 0;
+    m_moves[m_dis.up_key].second = -m_block_size;
+    m_invalid_move[0][-m_block_size] = m_dis.down_key;
 
-    m_moves[m_dis.down].first = 0;
-    m_moves[m_dis.down].second = m_block_size;
-    m_invalid_move[0][m_block_size] = m_dis.up;
+    m_moves[m_dis.down_key].first = 0;
+    m_moves[m_dis.down_key].second = m_block_size;
+    m_invalid_move[0][m_block_size] = m_dis.up_key;
 
     while (m_height % m_block_size != 0 && m_width % m_block_size != 0)
     {
@@ -33,7 +34,7 @@ m_db(), m_random(), m_gen(m_random()), m_distr_x(0, width - block_size), m_distr
 
 SnakeGame::~SnakeGame()
 {
-    m_manu_op.clear();
+    m_manu_options.clear();
     m_moves.clear();
 }
 
@@ -61,7 +62,10 @@ void SnakeGame::RunGame()
             GenerateFood();
         }
 
-        AdjustAcceleration();
+        if (m_is_hard_mode)
+        {
+            AdjustAcceleration();
+        }
         m_dis.ChangeFrame(m_acceleration);
     }
 }
@@ -108,14 +112,21 @@ void SnakeGame::GameManu()
 
 void SnakeGame::ResetGame()
 {
-    GetName();
+    m_is_accelerate = false;
+    m_is_pause = false;
+    m_is_hard_mode = false;
+    
+    m_player_name = GetUserInput("New Game Enter name: ");
+    std::string mode = GetUserInput("New Game Enter 2 For Hard Mode\nWith Acceleration or press Enter: ");
+    if ('2' == *mode.begin())
+    {
+        m_is_hard_mode = true;
+    }    
     m_dis.FillBackGround(sf::Color::Blue);
     m_snake.ClearSnake();
     m_dis.SetFrameSpeed(m_speed);
-    m_is_accelerate = false;
-    m_is_pause = false;
-    m_x1 = m_width / 2;
-    m_y1 = m_height / 2;
+    m_block_point_width = m_width / 2;
+    m_block_point_height = m_height / 2;
     GenerateFood();
     m_dis.UpdateFrame();
     m_dis.ChangeFrame(0);
@@ -131,8 +142,10 @@ void SnakeGame::PrintSnake()
 
 void SnakeGame::GenerateFood()
 {
-    m_foodx = static_cast<int>(m_distr_x(m_gen) / m_block_size) * m_block_size;
-    m_foody = static_cast<int>(m_distr_y(m_gen) / m_block_size) * m_block_size;
+    m_food_point_width = static_cast<int>(m_rand_width_point(m_random_generator) 
+                                        / m_block_size) * m_block_size;
+    m_food_point_height = static_cast<int>(m_rand_height_point(m_random_generator) 
+                                         / m_block_size) * m_block_size;
 }
 
 void SnakeGame::ShowScoreTable()
@@ -184,9 +197,9 @@ void SnakeGame::ShowMenu()
 
 bool SnakeGame::IsContinue(KEY key) 
 {
-    if (m_manu_op.find(key) != m_manu_op.end())
+    if (m_manu_options.find(key) != m_manu_options.end())
     {
-        m_game_over = m_manu_op[key];
+        m_game_over = m_manu_options[key];
         m_game_close = false;
         if (m_game_over)
         {
@@ -205,45 +218,45 @@ void SnakeGame::SetNexMove(KEY keypressed)
 {
     if (m_moves.find(keypressed) != m_moves.end())
     {
-        if (keypressed != m_invalid_move[m_x1_change][m_y1_change])
+        if (keypressed != m_invalid_move[m_width_point_change][m_height_point_change])
         {
-            m_x1_change = m_moves[keypressed].first;
-            m_y1_change = m_moves[keypressed].second;         
+            m_width_point_change = m_moves[keypressed].first;
+            m_height_point_change = m_moves[keypressed].second;         
         }
     }
 }
 
 void SnakeGame::Move()
 {
-    m_x1 += m_x1_change;
-    m_y1 += m_y1_change;
+    m_block_point_width += m_width_point_change;
+    m_block_point_height += m_height_point_change;
 
-    if (0 > m_x1)
+    if (0 > m_block_point_width)
     {
-        m_x1 = m_width + m_x1_change;
+        m_block_point_width = m_width + m_width_point_change;
     }
-    else if (m_width == m_x1)
+    else if (m_width == m_block_point_width)
     {
-        m_x1 = 0;
-    }
-
-    if (0 > m_y1)
-    {
-        m_y1 = m_height + m_y1_change;
-    }
-    else if (m_height == m_y1)
-    {
-        m_y1 = 0;
+        m_block_point_width = 0;
     }
 
-    BLOCK2D head(m_x1, m_y1);
+    if (0 > m_block_point_height)
+    {
+        m_block_point_height = m_height + m_height_point_change;
+    }
+    else if (m_height == m_block_point_height)
+    {
+        m_block_point_height = 0;
+    }
+
+    BLOCK2D head(m_block_point_width, m_block_point_height);
     m_snake.MoveSnake(head);         
 }
 
 void SnakeGame::DisplayFrame()
 {
     m_dis.FillBackGround(sf::Color::Blue);
-    m_dis.DrawRec(m_foodx, m_foody, m_block_size, sf::Color::Green);
+    m_dis.DrawRec(m_food_point_width, m_food_point_height, m_block_size, sf::Color::Green);
     PrintSnake();
     m_dis.YourScore(m_snake.GetLength() - 1);
     m_dis.YourSpeed();
@@ -252,41 +265,8 @@ void SnakeGame::DisplayFrame()
 
 bool SnakeGame::IsEat() const
 {
-    return m_x1 == m_foodx && m_y1 == m_foody;
-}
-
-void SnakeGame::GetName()
-{
-    m_dis.FillBackGround(sf::Color::Blue);
-    m_dis.Message("New Game Enter name: ");
-    m_dis.UpdateFrame();
-    std::string name("");
-    bool is_running = true;
-    while (is_running)
-    {
-        sf::Event event;
-        if (m_dis.IsEvent(event))
-        {   
-            if (IsKeyPressed(event)){
-                if (IsBackSpace()){
-                    auto iter = name.end();
-                    --iter;
-                    name.erase(iter);
-                }
-                else if (IsEnter()){
-                    is_running = false;
-                }
-                else{
-                    name += FromKtoS(event.key.code);
-                }
-            }
-        }
-        m_dis.FillBackGround(sf::Color::Blue);        
-        m_dis.Message("New Game Enter name:   " + name + "");
-        m_dis.UpdateFrame();
-    }
-    
-    m_player_name = name;
+    return m_block_point_width == m_food_point_width && 
+           m_block_point_height == m_food_point_height;
 }
 
 void SnakeGame::AdjustAcceleration()
@@ -300,7 +280,7 @@ void SnakeGame::AdjustAcceleration()
             m_is_accelerate = false;
         }
     }
-    else if ((m_snake.GetLength() % 10 - 1) != 0)
+    else if ((m_snake.GetLength() - 1) % 10 != 0)
     {
         m_is_accelerate = true;
     }
@@ -315,3 +295,38 @@ void SnakeGame::UpdateScore()
     m_db.WriteToDB(line);
 }
 
+std::string SnakeGame::GetUserInput(std::string msg)
+{
+    m_dis.FillBackGround(sf::Color::Blue);
+    m_dis.Message(msg);
+    m_dis.UpdateFrame();
+    std::string user_input("");
+    std::string updated_msg("");
+    bool is_running = true;
+    while (is_running)
+    {
+        sf::Event event;
+        if (m_dis.IsEvent(event))
+        {   
+            if (IsKeyPressed(event)){
+                if (IsBackSpace()){
+                    auto iter = user_input.end();
+                    --iter;
+                    user_input.erase(iter);
+                }
+                else if (IsEnter()){
+                    is_running = false;
+                }
+                else{
+                    user_input += FromKtoS(event.key.code);
+                }
+            }
+        }
+        m_dis.FillBackGround(sf::Color::Blue);
+        updated_msg = msg + user_input;       
+        m_dis.Message(updated_msg);
+        m_dis.UpdateFrame();
+    }
+
+    return user_input;    
+}
