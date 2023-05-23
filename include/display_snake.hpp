@@ -42,12 +42,12 @@ public:
     void YourSpeed();
     void SetFrameSpeed(int speed);
     
-    KEY left;
-    KEY right;
-    KEY up;
-    KEY down;
-    KEY q;
-    KEY c;
+    KEY left_key;
+    KEY right_key;
+    KEY up_key;
+    KEY down_key;
+    KEY q_key;
+    KEY c_key;
 private:
     sf::Clock m_clock;
     sf::Font m_font;
