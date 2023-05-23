@@ -8,3 +8,6 @@ snake game in c++
 4.  To build the executable snake game, type in the command line 'make release' from under the same directory as the repository
 5.  run the executable 'play_snake_game.out' from the command line
 6.  Follow the in-game manu promps and use the arrow keys to move the snake
+
+## Scores
+The game uses a text file to record and display the history of scores
