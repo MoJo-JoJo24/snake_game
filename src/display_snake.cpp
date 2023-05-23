@@ -1,4 +1,3 @@
-#include <math.h>
 #include "display_snake.hpp"
 
 SnakeDisplay::SnakeDisplay(int width, int height, int speed)
@@ -78,7 +77,7 @@ void SnakeDisplay::Message(std::string str)
     text.setFillColor(sf::Color::Red);
     text.setString(str.c_str());
     text.setCharacterSize(24);
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    text.setStyle(sf::Text::Bold);
 
     text.setPosition(m_width / 6, m_height / 3);
 
@@ -96,14 +95,14 @@ void SnakeDisplay::PrintRows(std::vector<std::vector<std::string>> rows)
     for (size_t i = 0; i < rows.size(); ++i)
     {
         int row_indent = 20;
-        for (std::string str : rows[i])
+        for (std::string col : rows[i])
         {
-            auto iter = str.begin();
+            auto iter = col.begin();
             if ('\n' == *iter)
             {
-                str.erase(iter);
+                col.erase(iter);
             }
-            text.setString(str.c_str());
+            text.setString(col.c_str());
             text.setCharacterSize(20);
             text.setStyle(sf::Text::Bold | sf::Text::Italic);
             text.setPosition(row_indent, curr_height);
