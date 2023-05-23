@@ -3,7 +3,7 @@
 
 int main()
 {
-    SnakeGame game(800, 600, 15, 20);
+    SnakeGame game(800, 600, 20, 20);
     game.RunGame();
     return 0;
 }
