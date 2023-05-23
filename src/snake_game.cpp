@@ -1,4 +1,3 @@
-#include <iostream>
 #include "snake_game.hpp"
 
 SnakeGame::SnakeGame(int width, int height, int speed, int block_size): 
@@ -295,13 +294,13 @@ void SnakeGame::AdjustAcceleration()
     m_acceleration = 0;
     if (m_is_accelerate)
     {
-        if (m_snake.GetLength() % 10 == 0)
+        if ((m_snake.GetLength() - 1) % 10 == 0)
         {
             m_acceleration = 2;
             m_is_accelerate = false;
         }
     }
-    else if (m_snake.GetLength() % 10 != 0)
+    else if ((m_snake.GetLength() % 10 - 1) != 0)
     {
         m_is_accelerate = true;
     }
