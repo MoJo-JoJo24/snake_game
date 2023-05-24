@@ -17,6 +17,12 @@ std::string FromKtoS(const sf::Keyboard::Key& k);
 
 typedef sf::Event::EventType EVENT_TYPE;
 typedef enum sf::Keyboard::Key KEY;
+const KEY left_key = sf::Keyboard::Key::Left;
+const KEY right_key = sf::Keyboard::Key::Right;
+const KEY up_key = sf::Keyboard::Key::Up;
+const KEY down_key = sf::Keyboard::Key::Down;
+const KEY q_key = sf::Keyboard::Key::Q;
+const KEY c_key = sf::Keyboard::Key::C; 
 
 class SnakeDisplay
 {
@@ -42,12 +48,7 @@ public:
     void YourSpeed();
     void SetFrameSpeed(int speed);
     
-    KEY left_key;
-    KEY right_key;
-    KEY up_key;
-    KEY down_key;
-    KEY q_key;
-    KEY c_key;
+
 private:
     sf::Clock m_clock;
     sf::Font m_font;

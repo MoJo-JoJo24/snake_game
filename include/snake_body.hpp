@@ -25,4 +25,6 @@ private:
     int m_snake_length;
 };
 
+bool IsSame(const BLOCK2D a, const BLOCK2D b);
+
 #endif /* __SNAKE_BODY__*/
