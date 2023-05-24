@@ -11,11 +11,11 @@ sudo apt-get install libsfml-dev
 play_snake_game.cpp, snakebodymediator.cpp, scoremanager.cpp, displaymediator.cpp, score_database.cpp, display_snake.cpp, snake_body.cpp, and snake_game.cpp
 5. Compile geme form the command line:
 
-option 1 using makefile:
+  option 1 using makefile:
 ```sh
 make release
 ```
-option 2:
+  option 2:
 ```sh
 g++ -std=c++17 -pedantic-errors -Wall -Wextra -DNDEBUG -O3 -I ./include test/play_snake_game.cpp src/snakebodymediator.cpp src/scoremanager.cpp src/displaymediator.cpp src/score_database.cpp src/display_snake.cpp src/snake_body.cpp src/snake_game.cpp -o play_snake_game.out -lsfml-graphics -lsfml-window -lsfml-system
 ```
