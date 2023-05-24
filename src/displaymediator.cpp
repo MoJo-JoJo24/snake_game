@@ -213,9 +213,6 @@ void DisplayMediator::PrintSnake(const std::vector<BLOCK2D> &snake)
 
 void DisplayMediator::GenerateFood()
 {
-    m_food.first = static_cast<int>(780 / m_block_size) * m_block_size;
-    m_food.second = static_cast<int>(0 / m_block_size) * m_block_size;
-
-    // m_food.first = static_cast<int>((m_rand.GetRandomWidth()) / m_block_size) * m_block_size;
-    // m_food.second = static_cast<int>((m_rand.GetRandomHeight()) / m_block_size) * m_block_size;
+    m_food.first = static_cast<int>((m_rand.GetRandomWidth()) / m_block_size) * m_block_size;
+    m_food.second = static_cast<int>((m_rand.GetRandomHeight()) / m_block_size) * m_block_size;
 }
