@@ -116,14 +116,15 @@ std::string ScoreDataBase::ReadFromDB(int row_number)
     {
         throw std::runtime_error("Failed to Open File!");
     }
-    char *buf = new char [m_row_size];
+    char *buf = (char *)calloc(1, m_row_size + 1);
+
     file_handle.seekg(m_row_size * (row_number - 1), std::ios::beg);
     file_handle.read(buf, m_row_size);
     file_handle.close();
 
-    std::string row(buf);
-    delete [] buf;
-
+    std::string row = buf;
+    free(buf);
+    buf = NULL;
     return row;
 }
 

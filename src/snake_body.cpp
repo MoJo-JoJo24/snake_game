@@ -25,7 +25,7 @@ bool SnakeBody::IsSnakeValid() const
     {
         if (m_snake[i].first == head.first && m_snake[i].second == head.second)
         {
-            return false;
+            return false; //change to internal function Issame
         }
     }
 
@@ -51,4 +51,9 @@ void SnakeBody::ClearSnake()
 {
     m_snake.clear();
     m_snake_length = 1;
+}
+
+bool IsSame(const BLOCK2D a, const BLOCK2D b)
+{
+    return a.first == b.first && a.second == b.second;
 }
