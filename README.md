@@ -10,6 +10,7 @@ sudo apt-get install libsfml-dev
 3. source files for compilaiton include:
 play_snake_game.cpp, snakebodymediator.cpp, scoremanager.cpp, displaymediator.cpp, score_database.cpp, display_snake.cpp, snake_body.cpp, and snake_game.cpp
 5. Compile geme form the command line:
+
 option 1 using makefile:
 ```sh
 make release
