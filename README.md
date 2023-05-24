@@ -16,7 +16,7 @@ make release
 ```
 option 2:
 ```sh
-g++ -std=c++17 -pedantic-errors -Wall -Wextra -g -I ./include test/play_snake_game.cpp src/snakebodymediator.cpp src/scoremanager.cpp src/displaymediator.cpp src/score_database.cpp src/display_snake.cpp src/snake_body.cpp src/snake_game.cpp -o play_snake_game.out -lsfml-graphics -lsfml-window -lsfml-system
+g++ -std=c++17 -pedantic-errors -Wall -Wextra -DNDEBUG -O3 -I ./include test/play_snake_game.cpp src/snakebodymediator.cpp src/scoremanager.cpp src/displaymediator.cpp src/score_database.cpp src/display_snake.cpp src/snake_body.cpp src/snake_game.cpp -o play_snake_game.out -lsfml-graphics -lsfml-window -lsfml-system
 ```
 5. Run the executable 'play_snake_game.out' from the command line
 ```sh
