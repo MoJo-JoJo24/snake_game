@@ -7,8 +7,9 @@ snake game in c++
 sudo apt-get install libsfml-dev
 ```
 2. make sure to download from this repository the image file arial.ttf and save in the same directory as the executable
-3. source files for compilaiton play_snake_game.cpp, snakebodymediator.cpp, scoremanager.cpp, displaymediator.cpp, score_database.cpp, display_snake.cpp, snake_body.cpp, and snake_game.cpp
-4. Compile geme form the command line:
+3. source files for compilaiton include:
+play_snake_game.cpp, snakebodymediator.cpp, scoremanager.cpp, displaymediator.cpp, score_database.cpp, display_snake.cpp, snake_body.cpp, and snake_game.cpp
+5. Compile geme form the command line:
 option 1 using makefile:
 ```sh
 make release
