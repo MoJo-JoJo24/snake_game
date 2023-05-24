@@ -8,7 +8,7 @@
 class RandomPointGenerator
 {
 public:
-    RandomPointGenerator(int width, int height);
+    RandomPointGenerator(int width, int height, int block_size_offset);
     ~RandomPointGenerator();
     int GetRandomWidth();
     int GetRandomHeight();
