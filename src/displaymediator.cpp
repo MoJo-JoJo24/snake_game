@@ -105,7 +105,7 @@ KEY DisplayMediator::GetKeyPressed()
         return event.key.code;
     }
 
-    return KEY::Unknown; //input to IsContinue in game
+    return KEY::Unknown; 
 }
 
 KEY DisplayMediator::CaptureKeyboardEvent(bool &flag_game_close, bool &flag_game_over)
@@ -126,7 +126,7 @@ KEY DisplayMediator::CaptureKeyboardEvent(bool &flag_game_close, bool &flag_game
         } 
     }
 
-    return KEY::Unknown; //input to SetNextMove in game
+    return KEY::Unknown; 
 }
 
 void DisplayMediator::DisplayFrame(const std::vector<BLOCK2D> &snake)
