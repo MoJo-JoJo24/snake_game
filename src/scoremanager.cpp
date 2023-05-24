@@ -4,7 +4,9 @@ ScoreManager::ScoreManager(): m_db(), m_scores()
 {}
 
 ScoreManager::~ScoreManager()
-{}
+{
+    m_scores.clear();
+}
 
 std::vector<std::vector<std::string>> ScoreManager::UpdateScoreTable(std::string &name, int score)
 {

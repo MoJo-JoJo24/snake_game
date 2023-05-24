@@ -23,9 +23,9 @@ bool SnakeBody::IsSnakeValid() const
     BLOCK2D head = m_snake[m_snake_length - 1];
     for (int i = 0; i < m_snake_length - 1; ++i)
     {
-        if (m_snake[i].first == head.first && m_snake[i].second == head.second)
+        if (IsSame(head, m_snake[i]))
         {
-            return false; //change to internal function Issame
+            return false; 
         }
     }
 

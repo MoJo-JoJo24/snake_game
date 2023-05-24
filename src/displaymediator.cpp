@@ -1,8 +1,8 @@
 #include "displaymediator.hpp"
 
-RandomPointGenerator::RandomPointGenerator(int width, int height):
+RandomPointGenerator::RandomPointGenerator(int width, int height, int block_size_offset):
 m_random_seed(), m_random_generator(m_random_seed()), 
-m_random_width_range(0, width), m_random_height_range(0, height)
+m_random_width_range(0, width - block_size_offset), m_random_height_range(0, height - block_size_offset)
 {}
 
 RandomPointGenerator::~RandomPointGenerator()
@@ -19,13 +19,15 @@ int RandomPointGenerator::GetRandomHeight()
 }
 
 DisplayMediator::DisplayMediator(int width, int height, int speed, int block_size):
-m_display(width, height, speed), m_rand(width, height), m_player_name(""), 
+m_display(width, height, speed), m_rand(width, height, block_size), m_player_name(""), 
 m_food(0, 0), m_block_size(block_size), m_is_accelerate(false), m_is_pause(false), 
 m_framespeed(speed), m_acceleration_value(0), m_score(0), m_finalscores()
 {}
 
 DisplayMediator::~DisplayMediator()
-{}
+{
+    m_finalscores.clear();
+}
 
 std::string DisplayMediator::GetUserInput(std::string msg)
 {
@@ -105,7 +107,7 @@ KEY DisplayMediator::GetKeyPressed()
         return event.key.code;
     }
 
-    return KEY::Unknown; 
+    return KEY::Unknown; //input to IsContinue in game
 }
 
 KEY DisplayMediator::CaptureKeyboardEvent(bool &flag_game_close, bool &flag_game_over)
@@ -126,7 +128,7 @@ KEY DisplayMediator::CaptureKeyboardEvent(bool &flag_game_close, bool &flag_game
         } 
     }
 
-    return KEY::Unknown; 
+    return KEY::Unknown; //input to SetNextMove in game
 }
 
 void DisplayMediator::DisplayFrame(const std::vector<BLOCK2D> &snake)
@@ -211,6 +213,9 @@ void DisplayMediator::PrintSnake(const std::vector<BLOCK2D> &snake)
 
 void DisplayMediator::GenerateFood()
 {
-    m_food.first = static_cast<int>((m_rand.GetRandomWidth()) / m_block_size) * m_block_size;
-    m_food.second = static_cast<int>((m_rand.GetRandomHeight()) / m_block_size) * m_block_size;
+    m_food.first = static_cast<int>(780 / m_block_size) * m_block_size;
+    m_food.second = static_cast<int>(0 / m_block_size) * m_block_size;
+
+    // m_food.first = static_cast<int>((m_rand.GetRandomWidth()) / m_block_size) * m_block_size;
+    // m_food.second = static_cast<int>((m_rand.GetRandomHeight()) / m_block_size) * m_block_size;
 }

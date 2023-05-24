@@ -146,8 +146,7 @@ std::vector<ROW> ScoreDataBase::GETScoreTable()
     }
 
     std::vector<ROW> res;
-
-    char *buf = new char [m_row_size];
+    char *buf = (char *)calloc(1, m_row_size + 1);
     char *head = buf;
     int row_count = 2;
     int length = GetLengthOfFile(file_handle);
@@ -164,7 +163,9 @@ std::vector<ROW> ScoreDataBase::GETScoreTable()
     }
 
     file_handle.close();
-    delete [] head;
+    free(head);
+    buf = NULL;
+    head = NULL;
 
     return res;
 }
