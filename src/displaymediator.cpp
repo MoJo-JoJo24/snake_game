@@ -70,7 +70,7 @@ bool DisplayMediator::ResetDisplay()
     m_is_accelerate = false;
     m_is_pause = false;
     m_player_name = GetUserInput("New Game Enter name: ");
-    std::string mode = GetUserInput("New Game Enter 2 For Hard Mode\nor press Enter: ");
+    std::string mode = GetUserInput("New Game\nEnter 2 For Hard Mode or press Enter: ");
 
     m_display.FillBackGround(sf::Color::Blue);
     m_display.SetFrameSpeed(m_framespeed);
