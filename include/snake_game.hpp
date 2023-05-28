@@ -21,7 +21,7 @@ private:
     bool IsContinue(KEY);
     void GameManu();
 
-    bool m_is_hard_mode;
+    int m_acceleration;
     bool m_game_over;
     bool m_game_close;
     bool m_is_score_updated;

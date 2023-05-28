@@ -2,6 +2,7 @@
 #define __DISPLAYENGINE__
 #include <random>
 #include <unordered_map>
+#include <unordered_set>
 #include "snake_body.hpp"
 #include "display_snake.hpp"
 
@@ -28,7 +29,7 @@ public:
     const DisplayMediator& operator=(const DisplayMediator& other) = delete;
     
     std::string GetUserInput(std::string msg);
-    bool ResetDisplay();
+    int ResetDisplay();
     KEY GetKeyPressed();
     void ShowManu();
     KEY CaptureKeyboardEvent(bool &flag_game_close, bool &flag_game_over);
@@ -38,7 +39,7 @@ public:
 
     void PrintSnake(const std::vector<BLOCK2D> &snake);
     void GenerateFood();
-    void AdjustAcceleration();
+    void AdjustAcceleration(int acceleration);
     void SetScores(std::vector<std::vector<std::string>> finalscores);
     void SetBlockSize(int block_size);
     BLOCK2D GetFood() const;
@@ -59,7 +60,10 @@ private:
     int m_framespeed;
     int m_acceleration_value;
     int m_score;
-    std::vector<std::vector<std::string>> m_finalscores;            
+    std::vector<std::vector<std::string>> m_finalscores;
+    std::unordered_map<char, int> m_acceleration_options;
+    std::unordered_set<std::string> m_speed_options;            
+            
 };
 
 #endif /* __DISPLAYENGINE__ */

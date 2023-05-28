@@ -44,9 +44,11 @@ public:
     void Close();
     bool IsOpen();
     void Message(std::string);
-    void YourScore(int score);
-    void YourSpeed();
+    // void YourScore(int score);
+    // void YourSpeed();
+    void DisplayHeader(const std::string&, int number, int indent);
     void SetFrameSpeed(int speed);
+    int GetFrameSpeed();
     
 
 private:
