@@ -12,6 +12,7 @@ SnakeDisplay::SnakeDisplay(int width, int height, int speed)
 
 SnakeDisplay::~SnakeDisplay()
 {
+    m_font.~Font();
     m_dis.close();
 }
 
@@ -106,33 +107,51 @@ void SnakeDisplay::PrintRows(std::vector<std::vector<std::string>> rows)
     }
 }
 
-
-void SnakeDisplay::YourScore(int score)
+void SnakeDisplay::DisplayHeader(const std::string& header, int number, int indent)
 {
     sf::Text text;
     text.setFont(m_font);
     text.setFillColor(sf::Color::Yellow);
-    std::string str("Your Score: " + std::to_string(score) + " ");
+    std::string str("Your "+header+": " + std::to_string(number) + " ");
     text.setString(str.c_str());
     text.setCharacterSize(20);
     text.setStyle(sf::Text::Underlined);    
-    text.setPosition(0, 0);
+    text.setPosition(indent, 0);
     
-    m_dis.draw(text);
+    m_dis.draw(text);    
 }
 
-void SnakeDisplay::YourSpeed()
-{
-    sf::Text text;
-    text.setFont(m_font);
-    text.setFillColor(sf::Color::Yellow);
-    std::string str("Your Speed: " + std::to_string(m_frame_speed) + " ");
-    text.setString(str.c_str());
-    text.setCharacterSize(20);
-    text.setStyle(sf::Text::Underlined);    
-    text.setPosition(200, 0);
+// void SnakeDisplay::YourScore(int score)
+// {
+//     sf::Text text;
+//     text.setFont(m_font);
+//     text.setFillColor(sf::Color::Yellow);
+//     std::string str("Your Score: " + std::to_string(score) + " ");
+//     text.setString(str.c_str());
+//     text.setCharacterSize(20);
+//     text.setStyle(sf::Text::Underlined);    
+//     text.setPosition(0, 0);
     
-    m_dis.draw(text);
+//     m_dis.draw(text);
+// }
+
+// void SnakeDisplay::YourSpeed()
+// {
+//     sf::Text text;
+//     text.setFont(m_font);
+//     text.setFillColor(sf::Color::Yellow);
+//     std::string str("Your Speed: " + std::to_string(m_frame_speed) + " ");
+//     text.setString(str.c_str());
+//     text.setCharacterSize(20);
+//     text.setStyle(sf::Text::Underlined);    
+//     text.setPosition(200, 0);
+    
+//     m_dis.draw(text);
+// }
+
+int SnakeDisplay::GetFrameSpeed()
+{
+    return m_frame_speed;
 }
 
 void SnakeDisplay::SetFrameSpeed(int speed)

@@ -22,10 +22,21 @@ DisplayMediator::DisplayMediator(int width, int height, int speed, int block_siz
 m_display(width, height, speed), m_rand(width, height, block_size), m_player_name(""), 
 m_food(0, 0), m_block_size(block_size), m_is_accelerate(false), m_is_pause(false), 
 m_framespeed(speed), m_acceleration_value(0), m_score(0), m_finalscores()
-{}
+{
+    m_acceleration_options['1'] = 0;
+    m_acceleration_options['2'] = 1;
+    m_acceleration_options['3'] = 2;
 
+    for (int i = 20; i <= 50; ++i)
+    {
+        m_speed_options.insert(std::to_string(i));
+    }
+}
+ 
 DisplayMediator::~DisplayMediator()
 {
+    m_acceleration_options.clear();
+    m_speed_options.clear();
     m_finalscores.clear();
 }
 
@@ -65,13 +76,18 @@ std::string DisplayMediator::GetUserInput(std::string msg)
     return user_input;    
 }
 
-bool DisplayMediator::ResetDisplay()
+int DisplayMediator::ResetDisplay()
 {
     m_is_accelerate = false;
     m_is_pause = false;
     m_player_name = GetUserInput("New Game Enter name: ");
-    std::string mode = GetUserInput("New Game\nEnter 2 For Hard Mode or press Enter: ");
-
+    std::string mode = GetUserInput("New Game\nEnter 1:  Easy Mode = no acceleration\nEnter 2: Normal Mode = slow acceleration\nEnter 3: Hard Mode = fast acceleration\nor press Enter: ");
+    std::string speed = GetUserInput("New Game\nCurrent Speed: "+std::to_string(m_framespeed)+"\nEnter a new speed between 20 - 50\nor press Enter: ");
+    auto speed_iter = m_speed_options.find(speed);
+    if (speed_iter != m_speed_options.end())
+    {
+        m_framespeed = std::stoi(*speed_iter);
+    }
     m_display.FillBackGround(sf::Color::Blue);
     m_display.SetFrameSpeed(m_framespeed);
 
@@ -79,7 +95,13 @@ bool DisplayMediator::ResetDisplay()
     m_display.UpdateFrame();
     m_display.ChangeFrame(0);
 
-    return '2' == *mode.begin();
+    auto mode_iter = m_acceleration_options.find(*mode.begin());
+    if (mode_iter != m_acceleration_options.end())
+    {
+        return mode_iter->second;
+    }
+
+    return 0;
 }
 
 void DisplayMediator::ShowManu()
@@ -95,7 +117,7 @@ void DisplayMediator::ShowManu()
         m_display.Message("You Lost! Press Q-Quit or C-Play Again");
     }
 
-    m_display.YourScore(m_score);
+    m_display.DisplayHeader(std::string("Score"), m_score, 0);
     m_display.UpdateFrame();    
 }
 
@@ -136,19 +158,19 @@ void DisplayMediator::DisplayFrame(const std::vector<BLOCK2D> &snake)
     m_display.FillBackGround(sf::Color::Blue);
     m_display.DrawRec(m_food.first, m_food.second, m_block_size, sf::Color::Green);
     PrintSnake(snake);
-    m_display.YourScore(m_score);
-    m_display.YourSpeed();
+    m_display.DisplayHeader(std::string("Score"), m_score, 0);
+    m_display.DisplayHeader(std::string("Speed"), m_display.GetFrameSpeed(), 200);
     m_display.UpdateFrame();    
 }
 
-void DisplayMediator::AdjustAcceleration()
+void DisplayMediator::AdjustAcceleration(int acceleration)
 {
     m_acceleration_value = 0;
     if (m_is_accelerate)
     {
         if (m_score % 10 == 0)
         {
-            m_acceleration_value = 2;
+            m_acceleration_value = acceleration;
             m_is_accelerate = false;
         }
     }

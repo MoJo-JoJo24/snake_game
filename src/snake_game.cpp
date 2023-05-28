@@ -1,7 +1,7 @@
 #include "snake_game.hpp"
 
 SnakeGame::SnakeGame(int width, int height, int speed, int block_size): 
-m_is_hard_mode(false), m_game_over(false), m_game_close(false), 
+m_acceleration(0), m_game_over(false), m_game_close(false), 
 m_is_score_updated(false), m_display_mediator(width, height, speed, block_size),
 m_score_db(), m_snake_mediator(width, height)
 {
@@ -9,7 +9,7 @@ m_score_db(), m_snake_mediator(width, height)
     {
         --block_size;
     }
-
+    
     m_manu_options[q_key] = true;
     m_manu_options[c_key] = false;
 
@@ -65,10 +65,11 @@ void SnakeGame::RunGame()
 
         m_display_mediator.SetScore(m_snake_mediator.GetSnakeLength() - 1);
         
-        if (m_is_hard_mode)
+        if (m_acceleration)
         {
-           m_display_mediator.AdjustAcceleration();
+           m_display_mediator.AdjustAcceleration(m_acceleration);
         }
+
         m_display_mediator.ChangeFrame();
     }
 }
@@ -99,12 +100,11 @@ void SnakeGame::GameManu()
 
 void SnakeGame::ResetGame()
 {
-    m_is_hard_mode = false;
     m_display_mediator.SetScore(m_snake_mediator.GetSnakeLength() - 1);
     m_snake_mediator.ClearSnake();
     m_snake_mediator.ResetPosition();
 
-    m_is_hard_mode = m_display_mediator.ResetDisplay();
+    m_acceleration = m_display_mediator.ResetDisplay();
 }
 
 bool SnakeGame::IsContinue(KEY key) 
