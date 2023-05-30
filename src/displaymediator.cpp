@@ -84,8 +84,8 @@ int DisplayMediator::ResetDisplay()
     m_is_accelerate = false;
     m_is_pause = false;
     m_player_name = GetUserInput("New Game Enter name: ");
-    std::string mode = GetUserInput("Choose mode 1, 2, 3, or press Enter\n\n1 = Easy Mode with no acceleration\n\n2 = Normal Mode with slow acceleration\n\n3 = Hard Mode with fast acceleration\n\n: ");
-    std::string speed = GetUserInput("Current Speed: "+std::to_string(m_framespeed)+"\n\nEnter a new speed between 20 - 50\n\nor press Enter\n\n: ");
+    std::string mode = GetUserInput("Choose mode 1, 2, 3\n\n1 = Easy Mode with no acceleration\n\n2 = Normal Mode with slow acceleration\n\n3 = Hard Mode with fast acceleration\n\nor press Enter: ");
+    std::string speed = GetUserInput("Current Speed: "+std::to_string(m_framespeed)+"\n\nEnter a new speed between 20 - 50\n\nor press Enter: ");
     auto speed_iter = m_speed_options.find(speed);
     if (speed_iter != m_speed_options.end())
     {
