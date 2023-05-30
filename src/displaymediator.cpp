@@ -55,9 +55,12 @@ std::string DisplayMediator::GetUserInput(std::string msg)
         {   
             if (IsKeyPressed(event)){
                 if (IsBackSpace()){
-                    auto iter = user_input.end();
-                    --iter;
-                    user_input.erase(iter);
+                    if(0 != user_input.size())
+                    {
+                        auto iter = user_input.end();
+                        --iter;
+                        user_input.erase(iter);
+                    }
                 }
                 else if (IsEnter()){
                     is_running = false;
@@ -81,25 +84,24 @@ int DisplayMediator::ResetDisplay()
     m_is_accelerate = false;
     m_is_pause = false;
     m_player_name = GetUserInput("New Game Enter name: ");
-    std::string mode = GetUserInput("New Game\nEnter 1:  Easy Mode = no acceleration\nEnter 2: Normal Mode = slow acceleration\nEnter 3: Hard Mode = fast acceleration\nor press Enter: ");
-    std::string speed = GetUserInput("New Game\nCurrent Speed: "+std::to_string(m_framespeed)+"\nEnter a new speed between 20 - 50\nor press Enter: ");
+    std::string mode = GetUserInput("Choose mode 1, 2, 3, or press Enter\n\n1 = Easy Mode with no acceleration\n\n2 = Normal Mode with slow acceleration\n\n3 = Hard Mode with fast acceleration\n\n: ");
+    std::string speed = GetUserInput("Current Speed: "+std::to_string(m_framespeed)+"\n\nEnter a new speed between 20 - 50\n\nor press Enter\n\n: ");
     auto speed_iter = m_speed_options.find(speed);
     if (speed_iter != m_speed_options.end())
     {
         m_framespeed = std::stoi(*speed_iter);
     }
-    m_display.FillBackGround(sf::Color::Blue);
     m_display.SetFrameSpeed(m_framespeed);
-
-    GenerateFood();
-    m_display.UpdateFrame();
-    m_display.ChangeFrame(0);
-
     auto mode_iter = m_acceleration_options.find(*mode.begin());
     if (mode_iter != m_acceleration_options.end())
     {
         return mode_iter->second;
     }
+
+    m_display.FillBackGround(sf::Color::Blue);
+    GenerateFood();
+    m_display.UpdateFrame();
+    m_display.ChangeFrame(0);
 
     return 0;
 }

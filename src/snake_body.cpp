@@ -36,7 +36,7 @@ bool SnakeBody::IsSnakeValid() const
 void SnakeBody::MoveSnake(BLOCK2D head)
 {
     m_snake.push_back(head);
-    if ((size_t)m_snake_length < m_snake.size())
+    if ((std::size_t)m_snake_length < m_snake.size())
     {
         m_snake.erase(m_snake.begin());
     }
