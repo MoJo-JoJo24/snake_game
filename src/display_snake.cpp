@@ -1,8 +1,8 @@
+
 #include "display_snake.hpp"
 
-SnakeDisplay::SnakeDisplay(int width, int height, int speed)
-: m_clock(), m_font(), m_dis(sf::VideoMode(width, height), "Snake Game"),
-  m_frame_speed(speed), m_width(width), m_height(height)
+SnakeDisplay::SnakeDisplay(int width, int height)
+: m_clock(), m_font(), m_dis(sf::VideoMode(width, height), "Snake Game")
 {   
     if (!m_font.loadFromFile("arial.ttf"))
     {
@@ -21,11 +21,10 @@ void SnakeDisplay::UpdateFrame()
     m_dis.display();
 }
 
-void SnakeDisplay::ChangeFrame(int change_speed_val)
+void SnakeDisplay::ChangeFrame(int speed_val)
 {
     sf::Time elapse = m_clock.getElapsedTime();
-    m_frame_speed += change_speed_val;
-    sf::Int32 ticker = 1000 / m_frame_speed;
+    sf::Int32 ticker = 1000 / speed_val;
     while (elapse.asMilliseconds() < ticker)
     {
         elapse = m_clock.getElapsedTime();
@@ -34,48 +33,19 @@ void SnakeDisplay::ChangeFrame(int change_speed_val)
     m_clock.restart();
 }
 
-bool SnakeDisplay::IsEvent(sf::Event& event)
-{
-    return m_dis.pollEvent(event);
-}
-
-void SnakeDisplay::FillBackGround(sf::Color color)
-{
-    m_dis.clear(color);
-}
-
-void SnakeDisplay::DrawRec(int x1, int y1, int block_size, sf::Color color)
-{
-    sf::RectangleShape rectangle(sf::Vector2f(block_size, block_size));
-
-    rectangle.setFillColor(color);
-    rectangle.setPosition(sf::Vector2f(x1, y1));
-    m_dis.draw(rectangle);
-}
-
-void SnakeDisplay::Close()
-{
-    m_dis.close();
-}
-
-bool SnakeDisplay::IsOpen()
-{
-    return m_dis.isOpen();
-}
-
-void SnakeDisplay::Message(std::string str)
+void SnakeDisplay::PrintMessage(std::string& str, sf::Color color, int text_size, int width, int height, sf::Text::Style style)
 {
     sf::Text text;
 
     text.setFont(m_font);
-    text.setFillColor(sf::Color::Red);
+    text.setFillColor(color);
     text.setString(str.c_str());
-    text.setCharacterSize(24);
-    text.setStyle(sf::Text::Bold);
+    text.setCharacterSize(text_size);
+    text.setStyle(style);
 
-    text.setPosition(m_width / 6, m_height / 3);
+    text.setPosition(width, height);
 
-    m_dis.draw(text);
+    m_dis.draw(text);    
 }
 
 void SnakeDisplay::PrintRows(std::vector<std::vector<std::string>> rows)
@@ -107,28 +77,28 @@ void SnakeDisplay::PrintRows(std::vector<std::vector<std::string>> rows)
     }
 }
 
-void SnakeDisplay::DisplayHeader(const std::string& header, int number, int indent)
+bool SnakeDisplay::IsEvent(sf::Event& event)
 {
-    sf::Text text;
-    text.setFont(m_font);
-    text.setFillColor(sf::Color::Yellow);
-    std::string str("Your "+header+": " + std::to_string(number) + " ");
-    text.setString(str.c_str());
-    text.setCharacterSize(20);
-    text.setStyle(sf::Text::Underlined);    
-    text.setPosition(indent, 0);
-    
-    m_dis.draw(text);    
+    return m_dis.pollEvent(event);
 }
 
-int SnakeDisplay::GetFrameSpeed()
+void SnakeDisplay::FillBackGround(sf::Color color)
 {
-    return m_frame_speed;
+    m_dis.clear(color);
 }
 
-void SnakeDisplay::SetFrameSpeed(int speed)
+void SnakeDisplay::DrawRec(int x1, int y1, int block_size, sf::Color color)
 {
-    m_frame_speed = speed;
+    sf::RectangleShape rectangle(sf::Vector2f(block_size, block_size));
+
+    rectangle.setFillColor(color);
+    rectangle.setPosition(sf::Vector2f(x1, y1));
+    m_dis.draw(rectangle);
+}
+
+void SnakeDisplay::Close()
+{
+    m_dis.close();
 }
 
 bool IsQuit(const sf::Event& event)

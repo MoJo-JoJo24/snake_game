@@ -19,9 +19,14 @@ int RandomPointGenerator::GetRandomHeight()
 }
 
 DisplayMediator::DisplayMediator(int width, int height, int speed, int block_size):
-m_display(width, height, speed), m_rand(width, height, block_size), m_player_name(""), 
-m_food(0, 0), m_block_size(block_size), m_is_accelerate(false), m_is_pause(false), 
-m_framespeed(speed), m_acceleration_value(0), m_score(0), m_finalscores()
+
+m_display(width, height), m_rand(width, height, block_size), m_player_name(""), 
+
+m_food(0, 0), m_block_size(block_size),m_width(width), m_height(height), 
+
+m_is_accelerate(false), m_is_pause(false), m_framespeed(speed), 
+
+m_acceleration_value(0), m_score(0), m_finalscores()
 {
     m_acceleration_options['1'] = 0;
     m_acceleration_options['2'] = 1;
@@ -43,7 +48,7 @@ DisplayMediator::~DisplayMediator()
 std::string DisplayMediator::GetUserInput(std::string msg)
 {
     m_display.FillBackGround(sf::Color::Blue);
-    m_display.Message(msg);
+    m_display.PrintMessage(msg, sf::Color::Red, 24, m_width / 6, m_height / 3);
     m_display.UpdateFrame();
     std::string user_input("");
     std::string updated_msg("");
@@ -72,7 +77,7 @@ std::string DisplayMediator::GetUserInput(std::string msg)
         }
         m_display.FillBackGround(sf::Color::Blue);
         updated_msg = msg + user_input;       
-        m_display.Message(updated_msg);
+        m_display.PrintMessage(updated_msg, sf::Color::Red, 24, m_width / 6, m_height / 3);
         m_display.UpdateFrame();
     }
 
@@ -84,14 +89,14 @@ int DisplayMediator::ResetDisplay()
     m_is_accelerate = false;
     m_is_pause = false;
     m_player_name = GetUserInput("New Game Enter name: ");
-    std::string mode = GetUserInput("Choose mode 1, 2, 3\n\n1 = Easy Mode with no acceleration\n\n2 = Normal Mode with slow acceleration\n\n3 = Hard Mode with fast acceleration\n\nor press Enter: ");
-    std::string speed = GetUserInput("Current Speed: "+std::to_string(m_framespeed)+"\n\nEnter a new speed between 20 - 50\n\nor press Enter: ");
+    std::string mode = GetUserInput("Press Enter or Choose mode 1, 2, 3\n\n1 = Easy Mode with no acceleration\n\n2 = Normal Mode with slow acceleration\n\n3 = Hard Mode with fast acceleration\n\nor press Enter: ");
+    std::string speed = GetUserInput("Press Enter or Change Speed\n\nCurrent Speed: "+std::to_string(m_framespeed)+"\n\nEnter a new speed between 20 - 50\n\nor press Enter: ");
     auto speed_iter = m_speed_options.find(speed);
     if (speed_iter != m_speed_options.end())
     {
         m_framespeed = std::stoi(*speed_iter);
     }
-    m_display.SetFrameSpeed(m_framespeed);
+    m_acceleration_value = 0;
     auto mode_iter = m_acceleration_options.find(*mode.begin());
     if (mode_iter != m_acceleration_options.end())
     {
@@ -101,7 +106,7 @@ int DisplayMediator::ResetDisplay()
     m_display.FillBackGround(sf::Color::Blue);
     GenerateFood();
     m_display.UpdateFrame();
-    m_display.ChangeFrame(0);
+    ChangeFrame();
 
     return 0;
 }
@@ -109,50 +114,31 @@ int DisplayMediator::ResetDisplay()
 void DisplayMediator::ShowManu()
 {
     m_display.FillBackGround(sf::Color::Blue);
+    std::string str("");
     if (m_is_pause)
     {
-        m_display.Message("Game Paused! Press Q-Quit or C-Play");
+        str = "Game Paused! Press Q-Quit or C-Play";
+        m_display.PrintMessage(str, sf::Color::Red, 24, m_width / 6, m_height / 3);
     }
     else
     {
         m_display.PrintRows(m_finalscores);
-        m_display.Message("You Lost! Press Q-Quit or C-Play Again");
+        str = "You Lost! Press Q-Quit or C-Play Again";
+        m_display.PrintMessage(str, sf::Color::Red, 24, m_width / 6, m_height / 3);
     }
-
-    m_display.DisplayHeader(std::string("Score"), m_score, 0);
+    str = "Your Score: " + std::to_string(m_score) + "";
+    m_display.PrintMessage(str, sf::Color::Yellow, 20, 0, 0, sf::Text::Underlined);
     m_display.UpdateFrame();    
 }
 
-KEY DisplayMediator::GetKeyPressed()
+KEY DisplayMediator::GetKeyPressed(sf::Event& event)
 {
-    sf::Event event;
     if (m_display.IsEvent(event) && IsKeyPressed(event))
     {
         return event.key.code;
     }
 
-    return KEY::Unknown; //input to IsContinue in game
-}
-
-KEY DisplayMediator::CaptureKeyboardEvent(bool &flag_game_close, bool &flag_game_over)
-{
-    sf::Event event;
-    if (m_display.IsEvent(event)){
-        if (IsQuit(event) || IsQ())
-            flag_game_over = true;
-        
-        if (IsKeyPressed(event)){
-            if (IsP()){
-                flag_game_close = true;
-                m_is_pause = true;
-            }
-            else{
-                return event.key.code;
-            }
-        } 
-    }
-
-    return KEY::Unknown; //input to SetNextMove in game
+    return KEY::Unknown; 
 }
 
 void DisplayMediator::DisplayFrame(const std::vector<BLOCK2D> &snake)
@@ -160,19 +146,20 @@ void DisplayMediator::DisplayFrame(const std::vector<BLOCK2D> &snake)
     m_display.FillBackGround(sf::Color::Blue);
     m_display.DrawRec(m_food.first, m_food.second, m_block_size, sf::Color::Green);
     PrintSnake(snake);
-    m_display.DisplayHeader(std::string("Score"), m_score, 0);
-    m_display.DisplayHeader(std::string("Speed"), m_display.GetFrameSpeed(), 200);
+    std::string str = "Your Score: " + std::to_string(m_score) + "";
+    m_display.PrintMessage(str, sf::Color::Yellow, 20, 0, 0, sf::Text::Underlined);
+    str = "Your Speed: " + std::to_string(m_framespeed + m_acceleration_value) + "";
+    m_display.PrintMessage(str, sf::Color::Yellow, 20, 200, 0, sf::Text::Underlined);
     m_display.UpdateFrame();    
 }
 
 void DisplayMediator::AdjustAcceleration(int acceleration)
 {
-    m_acceleration_value = 0;
     if (m_is_accelerate)
     {
         if (m_score % 10 == 0)
         {
-            m_acceleration_value = acceleration;
+            m_acceleration_value += acceleration;
             m_is_accelerate = false;
         }
     }
@@ -224,7 +211,8 @@ void DisplayMediator::SetPause(bool status)
 
 void DisplayMediator::ChangeFrame()
 {
-    m_display.ChangeFrame(m_acceleration_value);
+    //changed
+    m_display.ChangeFrame(m_framespeed + m_acceleration_value);
 }
 
 void DisplayMediator::PrintSnake(const std::vector<BLOCK2D> &snake)

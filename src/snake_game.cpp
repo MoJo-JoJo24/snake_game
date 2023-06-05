@@ -50,7 +50,19 @@ void SnakeGame::RunGame()
             GameManu();
         }
 
-        SetNexMove(m_display_mediator.CaptureKeyboardEvent(m_game_close, m_game_over));
+        sf::Event event;
+        if (IsQuit(event) || IsQ())
+        {
+            m_game_over = true;
+        }
+
+        if (IsP())
+        {
+            m_game_close = true;
+            m_display_mediator.SetPause(true);
+        }
+
+        SetNexMove(m_display_mediator.GetKeyPressed(event));
 
         m_snake_mediator.MoveSnake();
         if (!m_snake_mediator.IsMoveValid())
@@ -84,7 +96,8 @@ void SnakeGame::GameManu()
     }
 
     m_display_mediator.ShowManu();
-    if (IsContinue(m_display_mediator.GetKeyPressed()))
+    sf::Event event;
+    if (IsContinue(m_display_mediator.GetKeyPressed(event)))
     {
         if (m_display_mediator.IsPause())
         {
