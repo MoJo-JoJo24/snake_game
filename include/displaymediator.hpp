@@ -30,9 +30,8 @@ public:
     
     std::string GetUserInput(std::string msg);
     int ResetDisplay();
-    KEY GetKeyPressed();
+    KEY GetKeyPressed(sf::Event& event); 
     void ShowManu();
-    KEY CaptureKeyboardEvent(bool &flag_game_close, bool &flag_game_over);
     void DisplayFrame(const std::vector<BLOCK2D> &snake);
     void ChangeFrame();
 
@@ -55,11 +54,13 @@ private:
     std::string m_player_name;
     BLOCK2D m_food;
     int m_block_size;
+    int m_width;
+    int m_height;
     bool m_is_accelerate;
     bool m_is_pause;
     int m_framespeed;
     int m_acceleration_value;
-    int m_score;
+    int m_score; 
     std::vector<std::vector<std::string>> m_finalscores;
     std::unordered_map<char, int> m_acceleration_options;
     std::unordered_set<std::string> m_speed_options;            
