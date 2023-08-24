@@ -1,11 +1,11 @@
 #include <strings.h>
 #include <string.h>
 
-#include <score_database.hpp>
+#include "score_database.hpp"
 
 ScoreDataBase::ScoreDataBase(const std::string file_name): m_file_name(file_name),
 m_name_col_width(26), m_score_col_width(16), m_date_col_width(26), 
-m_row_size(m_name_col_width + m_score_col_width + m_date_col_width + 2)
+m_row_size(m_name_col_width + m_score_col_width + m_date_col_width + 2), m_row_counts(0)
 {
     std::ifstream file_handle(file_name, std::ios_base::in);
     if (!file_handle.is_open())
@@ -162,6 +162,7 @@ std::vector<ROW> ScoreDataBase::GETScoreTable()
         res.push_back(line);
     }
 
+    m_row_counts = row_count;
     file_handle.close();
     free(head);
     buf = NULL;
@@ -211,4 +212,9 @@ ROW ScoreDataBase::FromBuffer(char *buffer)
     }
 
     return line;
+}
+
+int ScoreDataBase::GetRowCount()
+{
+    return m_row_counts;
 }
