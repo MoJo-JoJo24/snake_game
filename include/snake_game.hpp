@@ -1,9 +1,10 @@
 #ifndef __SNAKE_GAME__
 #define __SNAKE_GAME__
 #include <unordered_map>
+#include <unordered_set>
 #include "scoremanager.hpp"
-#include "displaymediator.hpp"
-#include "snakebodymediator.hpp"
+#include "displaycontroller.hpp"
+#include "snakecontroller.hpp"
 
 class SnakeGame 
 {
@@ -15,22 +16,24 @@ public:
     void RunGame();
     
 private:
-    void ResetGame();
+    void SetGame();
     bool IsEat() const;
-    void SetNexMove(KEY);
-    bool IsContinue(KEY);
-    void GameManu();
+    void RegisterNexMove(char);
+    bool IsContinue(char);
+    void GetManuOption();
+    void DisplayFrame(BLOCK2D &shadow_tail);
+    void UpdateTopScores();
 
     int m_acceleration;
     bool m_game_over;
     bool m_game_close;
-    bool m_is_score_updated;
-    DisplayMediator m_display_mediator;
+    std::string m_player_name;
     ScoreManager m_score_db;
-    SnakeBodyMediator m_snake_mediator;
-    std::unordered_map<KEY, bool> m_manu_options;
-    std::unordered_map<KEY, BLOCK2D> m_moves;
-    std::unordered_map<WIDTH_POINT, std::unordered_map<HEIGHT_POINT, KEY>> m_invalid_move;
+    DisplayController m_display_controller;
+    SnakeBodyMediator m_snake_controller;
+    std::unordered_map<char, BLOCK2D> m_moves;
+    std::unordered_map<int, std::unordered_map<int, char>> m_invalid_move;
+    std::unordered_set<std::string> m_speed_options;
 };
 
 

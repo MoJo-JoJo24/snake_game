@@ -3,8 +3,6 @@
 #include <map>
 #include "score_database.hpp"
 
-const int number_of_final_score_rows = 5;
-
 class ScoreManager
 {
 public:
@@ -13,10 +11,13 @@ public:
     ScoreManager(const ScoreManager& other) = delete;
     const ScoreManager& operator=(const ScoreManager& other) = delete;
 
-    std::vector<std::vector<std::string>> UpdateScoreTable(std::string &name, int score);
+    void UpdateScoreTable(std::string &name, int score);
+    std::vector<std::vector<std::string>> &GetTopScores();
 private:
+    void UpdateTopScores();
     ScoreDataBase m_db;
-    std::vector<ROW> m_scores; //GetScoreTable one updated
+    std::vector<std::vector<std::string>> m_top_scores;
+    int m_number_of_top_scorers;
 };
 
 #endif /* __SCOREENGINE__ */

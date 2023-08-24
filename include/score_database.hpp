@@ -31,12 +31,14 @@ public:
     void ToBuffer(ROW& data_, std::string& str);
     ROW FromBuffer(char *buffer);
     static const std::string CurrentDateNTime();
+    int GetRowCount();
 private:
     std::string m_file_name;
     int m_name_col_width;
     int m_score_col_width;
     int m_date_col_width;
     int m_row_size;
+    int m_row_counts;
 };
 
 #endif /* __SCOREDB__ */
